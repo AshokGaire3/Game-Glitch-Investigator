@@ -55,4 +55,9 @@ A number guessing game built with Streamlit where the player tries to guess a se
 
 ## 🚀 Stretch Features
 
-- [ ] [If you choose to complete Challenge 4, insert a screenshot of your Enhanced Game UI here]
+### Challenge 1: Advanced Edge-Case Testing
+
+All 22 pytest tests pass:
+
+![pytest results](assets/Test.png)
+
