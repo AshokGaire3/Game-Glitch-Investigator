@@ -25,13 +25,33 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+### Game Purpose
+
+A number guessing game built with Streamlit where the player tries to guess a secret number within a limited number of attempts. The game supports three difficulty levels (Easy: 1–20, Normal: 1–50, Hard: 1–100), provides higher/lower hints after each guess, tracks a running score, and shows guess history. The twist: the original AI-generated code shipped with several bugs that made the game unwinnable.
+
+### Bugs Found
+
+1. **Secret number reset on every rerun** — `random.randint()` was called unconditionally at the top of the script, so every button click (which triggers a Streamlit rerun) generated a new secret.
+2. **Backwards hints on even attempts** — the secret was cast to a string on even attempts, causing lexicographic comparison (e.g., `"9" > "10"` → `True`), flipping the "Too High"/"Too Low" direction.
+3. **Difficulty ranges were inverted** — Normal was 0–100 but Hard was 0–50, making Hard easier than Normal.
+4. **Attempt counter off-by-one** — the sidebar displayed 1 more attempt than the game actually allowed.
+5. **Invalid input still consumed an attempt** — entering letters or non-numbers showed an error but incremented the attempt counter.
+6. **No way to restart after winning** — once the game was won there was no path to start a new game.
+
+### Fixes Applied
+
+- Wrapped the secret generation in `if "secret" not in st.session_state:` so it only runs once per game session.
+- Fixed `check_guess` in `logic_utils.py` to always compare integers, removing the string-cast path.
+- Corrected difficulty ranges in `get_range_for_difficulty` so Hard (1–100) is genuinely harder than Normal (1–50).
+- Aligned the sidebar attempt display with the actual `attempt_limit` value.
+- Moved the attempt increment inside the valid-input branch so invalid entries don't cost attempts.
+- Added a working "New Game" button that resets `st.session_state` and calls `st.rerun()`.
 
 ## 📸 Demo
 
-- [ ] [Insert a screenshot of your fixed, winning game here]
+![Winning game screenshot](assets/demo_win.png)
+
+> The fixed game correctly tracks the secret number, shows accurate Higher/Lower hints, and displays a win message with the final score.
 
 ## 🚀 Stretch Features
 
