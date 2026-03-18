@@ -55,6 +55,7 @@ if "difficulty" not in st.session_state:
 if st.session_state.difficulty != difficulty:
     st.session_state.secret = random.randint(low, high)
     st.session_state.attempts = 0
+    st.session_state.score = 0
     st.session_state.status = "playing"
     st.session_state.history = []
     st.session_state.difficulty = difficulty
@@ -91,6 +92,7 @@ if new_game:
     st.session_state.secret = random.randint(low, high)
     st.session_state.status = "playing"
     st.session_state.history = []
+    st.session_state.score = 0
     st.success("New game started.")
     st.rerun()
 
@@ -116,7 +118,7 @@ if submit:
 
         outcome = check_guess(guess_int, secret)
 
-        if show_hint:
+        if show_hint and outcome != "Win":
             st.warning(HINT_MESSAGES[outcome])
 
         st.session_state.score = update_score(
